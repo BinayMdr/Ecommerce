@@ -18,12 +18,35 @@ const App = () => {
         const data = await response.json()
         setProducts(data);
     }
+    // useEffect(() => {
+        
+    //     if(token != null){
+    //         axios.post('http://127.0.0.1:8000/api/me',{},{
+    //              headers:{
+    //                 "Authorization" : `bearer ${token}`,
+    //              }  
+    //             })
+    //         .then((response) => {
+    //             console.log(response.data)
+    //         })
+    //     }
+     // axios.post('http://127.0.0.1:8000/api/login',{ email : 'binaymdr25@gmail.com', password : 'password'})
+        //     .then((response) => {
+        //         setToken(response.data.access_token)
+        //         console.log(response.data)
+        //     })
+    // },[token]);
+
     useEffect(()=>{
         getProduct();
+        let cart_item = localStorage.getItem('cart')
+        if(cart_item != null) setCart(JSON.parse(localStorage.getItem('cart')))
     },[]);
+
 
     useEffect(()=>{
         setCartItem(cart.length)
+        localStorage.setItem('cart',JSON.stringify(cart))
     },[cart]);
     
     const addToCart = async (productId,quantity) => { 
@@ -77,6 +100,7 @@ const App = () => {
             if(!response.data.error) {
                 setCart([]);
                 setSuccess(response.data.message)
+                localStorage.removeItem('cart')
             }
         }).catch(error => {
             console.log(error)
